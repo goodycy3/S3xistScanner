@@ -35,11 +35,11 @@ Default output format [None]: json
 
 ## Note
 For the S3xistScanner to function properly, the AWS IAM user or role associated with your CLI profile must have the `s3:ListBucket` permission. 
-This permission is essential, as the script performs two key S3 actions:
+This permission is essential, as the script performs two key S3 API actions:
 
 - `s3:HeadBucket` – Used to check whether a bucket exists.
 
-- `s3:ListBucket` – Enables listing objects within a discovered bucket (triggered when using the -l or --list-objects flag).
+- `s3:ListBucket` – Enables listing objects within the discovered bucket (triggered when using the -l or --list-objects flag).
 
 ✅ Ensure the IAM policy attached to your profile includes the `s3:ListBucket` permission to return accurate and complete results.
 
@@ -119,3 +119,15 @@ Use 50 threads for a faster scan and save the results to found_buckets.txt.
 python3 s3_scanner.py -p dump_creds -w common-buckets.txt -r eu-west-1 -t 50 -o found_buckets.txt
 ```
 
+
+# Why S3xistScanner over ffuf and S3Scanner
+S3xistScanner is more reliable because it uses authenticated AWS API calls (`s3:ListBucket`) to check for a bucket's existence, which uses `s3:HeadBucket` API, and then lists objects within the discovered bucket. This method provides a definitive yes/no answer directly from AWS. In contrast, tools like ffuf and many S3 scanners guess by sending unauthenticated HTTP requests, which AWS now intentionally makes ambiguous to prevent this exact type of enumeration.
+
+### Reliability Comparison
+
+| Aspect | S3xistScanner (Your Script) | ffuf | S3Scanner (Anonymous Tools) |
+| :--- | :--- | :--- | :--- |
+| **Method** | Authenticated AWS API Call (`s3:ListBucket`) | Unauthenticated HTTP/HTTPS Requests | Unauthenticated HTTP/HTTPS Requests |
+| **Authentication** | Native AWS Profile (e.g. `~/.aws/credentials`) | None (Anonymous) | None (Anonymous) |
+| **Reliability** | **High** ✅<br>Receives a definitive status (200, 403, 404) directly from the AWS API. | **Low** ⚠️<br>Guesses based on ambiguous HTTP responses, which can be misleading. | **Low** ⚠️<br>Same as ffuf; cannot reliably distinguish a private bucket from a non-existent one. |
+| **Primary Use** | Confirming bucket existence with certainty using existing AWS credentials. | General-purpose, high-speed web fuzzing and content discovery. | Finding *publicly accessible* buckets and their contents. |
