@@ -34,7 +34,7 @@ The script's core functions rely on two main S3 actions:
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/S3xistScanner.git
+git clone https://github.com/goodycy3/S3xistScanner.git
 
 cd S3xistScanner
 ```
