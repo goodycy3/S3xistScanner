@@ -125,7 +125,7 @@ S3xistScanner is more reliable because it uses authenticated AWS API calls (`s3:
 
 ### Reliability Comparison
 
-| Aspect | S3xistScanner (Your Script) | ffuf | S3Scanner (Anonymous Tools) |
+| Aspect | S3xistScanner | ffuf | S3Scanner (Anonymous Tools) |
 | :--- | :--- | :--- | :--- |
 | **Method** | Authenticated AWS API Call (`s3:ListBucket`) | Unauthenticated HTTP/HTTPS Requests | Unauthenticated HTTP/HTTPS Requests |
 | **Authentication** | Native AWS Profile (e.g. `~/.aws/credentials`) | None (Anonymous) | None (Anonymous) |
