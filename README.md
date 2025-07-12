@@ -16,19 +16,32 @@ A fast and efficient Python script to discover if S3 buckets exist in a specifie
 
 # Prerequisites:
 
-- Install Python 3 
+✅ Install Python 3 
 
-- AWS CLI installed and configured.
+✅ AWS CLI installed and configured.
 
-- An AWS profile with the necessary permissions (`s3:HeadBucket, s3:ListBucket`) configured in your `~/.aws/credentials file`.
+✅ An AWS profile with the necessary permissions (`s3:HeadBucket, s3:ListBucket`) configured in your `~/.aws/credentials file`.
+
+### Configure your Profile via AWS CLI
+
+```bash 
+aws configure --profile your-profile-name
+
+AWS Access Key ID [None]: YOUR_ACCESS_KEY_ID
+AWS Secret Access Key [None]: YOUR_SECRET_ACCESS_KEY
+Default region name [None]: us-east-1
+Default output format [None]: json
+```
 
 ## Note
-For the S3-Scanner to work, the IAM user associated with your profile needs specific permissions. 
-The script's core functions rely on two main S3 actions:
+For the S3xistScanner to function properly, the AWS IAM user or role associated with your CLI profile must have the `s3:ListBucket` permission. 
+This permission is essential, as the script performs two key S3 actions:
 
-- `s3:HeadBucket`: To check if a bucket exists.
+- `s3:HeadBucket` – Used to check whether a bucket exists.
 
-- `s3:ListBucket`: To list the objects within a found bucket (used when you specify the `-l` flag).
+- `s3:ListBucket` – Enables listing objects within a discovered bucket (triggered when using the -l or --list-objects flag).
+
+✅ Ensure the IAM policy attached to your profile includes the `s3:ListBucket` permission to return accurate and complete results.
 
 # Installation
 Clone the repository:
