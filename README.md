@@ -1,2 +1,108 @@
 # S3xistScanner
 A fast and efficient Python script to discover if S3 buckets exist in a specified AWS region using a given wordlist. It leverages multithreading to check for bucket existence and can optionally list the contents of found buckets.
+
+
+# Features
+- Multithreaded Scanning: Utilizes multiple threads for high-speed bucket enumeration.
+
+- AWS Profile Integration: Seamlessly uses your existing AWS CLI profiles for authentication.
+
+- Object Listing: Optionally lists the first few objects in publicly accessible buckets.
+
+- Flexible Output: Results can be displayed in the terminal and saved to an output file.
+
+- Error Handling: Gracefully handles common AWS errors and provides informative logging.
+
+
+# Prerequisites:
+
+- Install Python 3 
+
+- AWS CLI installed and configured.
+
+- An AWS profile with the necessary permissions (`s3:HeadBucket, s3:ListBucket`) configured in your `~/.aws/credentials file`.
+
+## Note
+For the S3-Scanner to work, the IAM user associated with your profile needs specific permissions. 
+The script's core functions rely on two main S3 actions:
+
+- `s3:HeadBucket`: To check if a bucket exists.
+
+- `s3:ListBucket`: To list the objects within a found bucket (used when you specify the `-l` flag).
+
+# Installation
+Clone the repository:
+
+```bash
+git clone https://github.com/your-username/S3xistScanner.git
+
+cd S3xistScanner
+```
+
+# Create and Activate a Virtual Environment 
+A virtual environment keeps your project's dependencies separate from your system's global packages.
+
+On macOS/Linux:
+```bash
+# Create the virtual environment folder
+python3 -m venv venv
+
+# Activate the environment
+source venv/bin/activate
+```
+
+On Windows:
+```bash
+# Create the virtual environment folder
+python -m venv venv
+
+# Activate the environment
+.\venv\Scripts\activate
+```
+Your terminal prompt should now be prefixed with (venv), indicating the environment is active.
+
+# Install the required Python libraries:
+
+```bash
+pip install -r requirements.txt
+```
+
+# Usage
+
+Basic Syntax
+```bash
+python3 s3_scanner.py -p YOUR_PROFILE -w WORDLIST_PATH -r AWS_REGION [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Short Form | Description | Required |
+| :--- | :--- | :--- | :---: |
+| `--profile` | `-p` | The AWS CLI profile to use for authentication. | Yes |
+| `--wordlist` | `-w` | Path to the wordlist file containing potential bucket names. | Yes |
+| `--region` | `-r` | The AWS region to scan (e.g., `us-east-1`). | Yes |
+| `--threads` | `-t` | Number of concurrent threads to use (default: 20). | No |
+| `--list-objects` | `-l` | If specified, lists objects in buckets where permissions allow. | No |
+| `--output` | `-o` | The file path to save the scan results. | No |
+
+
+## Examples
+`Basic Scan`: Scan for S3 buckets in the us-west-2 region using the dev profile and a wordlist named buckets.txt.
+
+```bash
+python3 s3_scanner.py -p dump_creds -w buckets.txt -r us-west-2
+```
+
+`Scan with Object Listing`:
+Perform the same scan as above, but also list the contents of any found buckets.
+
+```bash
+python3 s3_scanner.py -p dump_creds -w buckets.txt -r us-west-2 --list-objects
+```
+
+`Scan with More Threads and Save to File`:
+Use 50 threads for a faster scan and save the results to found_buckets.txt.
+```bash
+python3 s3_scanner.py -p dump_creds -w common-buckets.txt -r eu-west-1 -t 50 -o found_buckets.txt
+```
+
